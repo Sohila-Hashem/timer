@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <title>Timer</title>
+</head>
+<body>
+    <main>
+    <div id='set-time-container'>
+        <div class='hours-column timer-column'>
+        <p>hours</p>
+        <input type='number' min='0' max='99' id='hours' class="timer-input" value="0">
+        </div>
+
+        <div class='minutes-column timer-column'>
+        <p>minutes</p>
+        <input type='number' min='0' max='59' id='minutes' class="timer-input" value="0">
+        </div>
+
+        <div class='seconds-column timer-column'>
+        <p>seconds</p>
+        <input type='number' min='0' max='59' id='seconds' class="timer-input" value="0">
+        </div>
+    </div>
+    <div class='timer-container'>
+        <span id="countDown-hours">00:</span>
+        <span id="countDown-minutes">00:</span>
+        <span id="countDown-seconds">00</span>
+    </div>
+    <div id="helper-btns">
+        <button class='helper-btn cancel'>cancel</button>
+        <button class='helper-btn start'>start</button>
+        <button class='helper-btn pause'>pause</button>
+    </div>
+    </main>
+    <script src="app.js"></script>
+</body>
+</html>
