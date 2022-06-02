@@ -99,7 +99,9 @@ const countDown = () => {
             if (reqSeconds <= 10) {
                 countDownSeconds.innerText = `0${--reqSeconds}`
                 // change animation and timer clock color theme
-                timerContainer.classList.add('change-theme-color')
+                if (Number(reqMinutes) === 0 && Number(reqHours === 0)) {
+                    timerContainer.classList.add('change-theme-color')
+                }
             } else {
                 countDownSeconds.innerText = `${--reqSeconds}`
             }
