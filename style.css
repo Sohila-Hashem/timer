@@ -1,3 +1,15 @@
+:root {
+    --default-theme-color: #eee;
+    --minus-five-theme-color: #d21c1c;
+    --body-bg: black;
+    --set-timer-container-bg: #ffffff21;
+    --timer-container-bg: #000000bd;
+    --set-timer-input-color: #000000bd;
+    --pause-btn-bg: #ff6347;
+    --resume-btn-bg: #5f9ea0;
+    --default-dark-bg-text: #f0f8ff;
+}
+
 p, label, blockquote, h1, h2, h3, h4, h5, h6 {
     text-transform: capitalize;
 }
@@ -16,7 +28,7 @@ body, html {
 }
 
 body {
-    background-color: black;
+    background-color: var(--body-bg);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -48,7 +60,7 @@ main {
 }
 
 #set-time-container {
-    background-color: #ffffff21;
+    background-color: var(--set-timer-container-bg);
     display: flex;
     padding: 10px;
     width: fit-content;
@@ -67,7 +79,7 @@ main {
     background-color: transparent;
     padding: 15px;
     font-size: 18px;
-    color: #eee;
+    color: var(--default-theme-color);
     width: 35%;
 }
 
@@ -80,23 +92,23 @@ main {
     padding: 7px;
     width: 100%;
     border-radius: 5px;
-    color: #000000bd;
-    background-color: #eee;
+    color: var(--set-timer-input-color);
+    background-color: var(--default-theme-color);
 }
 
 .timer-container {
     width: 250px;
     height: 250px;
-    background-color: #000000bd;
+    background-color: var(--timer-container-bg);
     display: flex;
     justify-content: center;
     align-items: center;
     border-radius: 50%;
     font-size: 35px;
-    color: #eee;
+    color: var(--default-theme-color);
     border: 5px solid;
-    box-shadow: 0 0 160px #eee;
-    margin: 20px;
+    box-shadow: 0 0 60px var(--default-theme-color);
+    margin: 50px;
     transition: all 0.5s ease-in-out;
     -webkit-transition: all 0.5s ease-in-out;
     -moz-transition: all 0.5s ease-in-out;
@@ -105,8 +117,8 @@ main {
 }
 
 .change-theme-color {
-    color: #d21c1c;
-    box-shadow: 0 0 160px#d21c1c;
+    color: var(--minus-five-theme-color);
+    box-shadow: 0 0 160px var(--minus-five-theme-color);
 }
 
 .helper-btn {
@@ -116,8 +128,8 @@ main {
     outline: 0;
     border-radius: 15px;
     font-size: 17px;
-    background-color: #eee;
-    color: black;
+    background-color: var(--default-theme-color);
+    color: var(--black);
     -webkit-border-radius: 15px;
     -moz-border-radius: 15px;
     -ms-border-radius: 15px;
@@ -134,13 +146,13 @@ main {
 
 .pause {
     left: 0;
-    background-color: tomato;
-    color: aliceblue;
+    background-color: var(--pause-btn-bg);
+    color: var(--default-light-bg-text);
 }
 
 .resume {
-    background-color: cadetblue;
-    color: aliceblue;
+    background-color: var(--resume-btn-bg);
+    color: var(--default-light-bg-text);
 }
 
 .hide-start-btn {
