@@ -46,15 +46,12 @@ const initTimerValues = () => {
                 if (e.target.id === 'hours') {
                     reqHours = e.target.value
                     hoursInMS = e.target.value * 60 * 60 * 1000
-                    console.log('requested Hours: ', reqHours);
                 } else if (e.target.id === 'minutes') {
                     reqMinutes = e.target.value
                     minutesInMs = e.target.value * 60 * 1000;
-                    console.log('requested Minutes: ', reqMinutes);
                 } else if (e.target.id === 'seconds') {
                     reqSeconds = e.target.value
                     secondsInMs = e.target.value * 1000;
-                    console.log('requested Seconds: ', reqSeconds);
                 }
                 timeInMillieSeconds = hoursInMS  + minutesInMs + secondsInMs
             }
@@ -90,7 +87,7 @@ const resetTimerVariables = () => {
 }
 
 const countDown = () => {
-    if ((hoursInput.value || minuteInput.value || secondsInput.value) && timeInMillieSeconds > 0) {
+    if (timeInMillieSeconds > 0) {
         timeInMillieSeconds-=1000
         if (hoursInput.value > 0) {
             reqHours <= 10 ? countDownHours.innerText = `0${reqHours}:` : countDownHours.innerText = `${reqHours}:`
@@ -112,7 +109,6 @@ const countDown = () => {
             if (reqSeconds <= 5 && Number(reqMinutes) === 0 && Number(reqHours) === 0) {
                 // change animation and timer clock color theme
                 countDownSeconds.innerText = `0${--reqSeconds}`
-                console.log('changing color theme fired!');
                 timerContainer.classList.add('change-theme-color')
             } else if (reqSeconds <= 10) {
                 countDownSeconds.innerText = `0${--reqSeconds}`
@@ -126,19 +122,28 @@ const countDown = () => {
         timerContainer.classList.remove('change-theme-color')
         resetTimerVariables()
         clearInterval(countDownInterval)
-        navigator.vibrate([200,100,200])
-        console.log('TIME\'S UP');
+        navigator.vibrate([500,200,500])
     }
 }
 
 startBtn.addEventListener('click', (e) => {
-    startBtnIndexCount++
-    if ((hoursInput.value || minuteInput.value || secondsInput.value) && timeInMillieSeconds > 0 && startBtnIndexCount === 1) {
-        addAnimations()
-        timerContainer.style.animation = 'up-down 1.5s ease-in-out 0s normal infinite forwards running'
-        countDownInterval = setInterval(() => {
-            countDown()
-        }, 1000)
+    if (
+        ((hoursInput.value <= 99 && hoursInput.value > 0) ||
+        (minuteInput.value <= 59 && minuteInput.value > 0) ||
+        (secondsInput.value <= 59 && secondsInput.value > 0))
+        && timeInMillieSeconds
+    ) {
+        startBtnIndexCount++
+        // here i'm setting a condition to make sure that if a user clicked more than
+        // once quickly on the start btn it only RUN ONCE
+        // while also making sure that this condition only runs when there's a valid inputs
+        if (startBtnIndexCount === 1) {
+            addAnimations()
+            timerContainer.style.animation = 'up-down 1.5s ease-in-out 0s normal infinite forwards running'
+            countDownInterval = setInterval(() => {
+                countDown()
+            }, 1000)
+        }
     }
 })
 
@@ -172,8 +177,3 @@ cancelBtn.addEventListener('click', (e) => {
     timerContainer.classList.remove('change-theme-color')
     clearInterval(countDownInterval)
 })
-
-
-class AnimationManipulation {
-
-}

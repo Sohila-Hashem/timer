@@ -147,12 +147,12 @@ main {
 .pause {
     left: 0;
     background-color: var(--pause-btn-bg);
-    color: var(--default-light-bg-text);
+    color: var(--default-dark-bg-text);
 }
 
 .resume {
     background-color: var(--resume-btn-bg);
-    color: var(--default-light-bg-text);
+    color: var(--default-dark-bg-text);
 }
 
 .hide-start-btn {
