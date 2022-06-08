@@ -36,11 +36,12 @@ let secondsInMs = 0
 let timeInMillieSeconds;
 
 // the setInterval fun
-let countDownInterval;
+let mainSetInterval;
 
 // start button tap index count
 let startBtnIndexCount = 0
 
+let bodyElement = document.body
 // -------------------------------- Helper Functions ---------------------------------
 
 const removeAnimations = () => {
@@ -51,6 +52,8 @@ const removeAnimations = () => {
     timerContainer.style.removeProperty('animation')
     timerContainer.classList.remove('change-theme-color')
     circleSvg.classList.remove('change-circle-color')
+    circleSvg.style.strokeDashoffset = '0%'
+    bodyElement.style.setProperty('--gradient-opacity', '0')
 }
 
 const addAnimations = () => {
@@ -58,6 +61,7 @@ const addAnimations = () => {
     startBtn.classList.add('hide-start-btn')
     pauseBtn.classList.add('show-pause-btn')
     cancelBtn.classList.add('show-cancel-btn')
+    timerContainer.style. animation = 'up-down 1.5s ease-in-out 0s normal infinite forwards running'
 }
 
 // using another variables and assigning the input values to them (reset process)
@@ -71,21 +75,36 @@ const resetTimerVariables = () => {
     startBtnIndexCount = 0
 }
 
-const resetEverything = () => {
-    resetTimerVariables()
+const resetTimerDisplayColumns = () => {
     countDownHours.innerText = '00:'
     countDownMinutes.innerText = '00:'
     countDownSeconds.innerText = '00'
 }
 
-const increaseTimeCircleOffset = () => {
-    let totalTimeInSeconds = (hoursInMS + minutesInMs + secondsInMs) / 1000
-    let requestedTimeInSeconds = (reqHours * 60 * 60) + (reqMinutes * 60) + reqSeconds
-    let relativeRemainingTimePercentage = Math.abs(((requestedTimeInSeconds * 126) / totalTimeInSeconds) - 126)
-    if (requestedTimeInSeconds === 1) {
-        circleSvg.style.strokeDashoffset = '126%'
-    } else {
-        circleSvg.style.strokeDashoffset = `${relativeRemainingTimePercentage}%`
+const changeOrLeaveThemeColor = () => {
+    if (reqSeconds <= 5 && reqHours === 0 && reqMinutes === 0) {
+        timerContainer.classList.add('change-theme-color')
+        circleSvg.classList.add('change-circle-color')
+        bodyElement.style.setProperty('--gradient-opacity', '1')
+    }
+}
+const resetEverything = () => {
+    removeAnimations()
+    resetTimerVariables()
+}
+
+const pauseOrResumeTimer = () => {
+    pauseBtn.classList.toggle('resume')
+    if (pauseBtn.innerText === 'pause') {
+        timerContainer.style.animationPlayState = 'paused';
+        pauseBtn.innerText = 'Resume'
+        clearInterval(mainSetInterval)
+    } else if (pauseBtn.innerText === 'Resume') {
+        timerContainer.style.animationPlayState = 'running';
+        pauseBtn.innerText = 'pause'
+        mainSetInterval = setInterval(() => {
+            mainFunction()
+        }, 1000)
     }
 }
 
@@ -94,19 +113,17 @@ const increaseTimeCircleOffset = () => {
 const initTimerValues = () => {
     for (let i = 0; i < timerInputs.length; i++) {
         timerInputs[i].addEventListener('blur', (e) => {
-            if (e.target.value <= 59 && e.target.value <= 99) {
-                if (e.target.id === 'hours') {
-                    reqHours = Number(e.target.value)
-                    hoursInMS = e.target.value * 60 * 60 * 1000
-                } else if (e.target.id === 'minutes') {
-                    reqMinutes = Number(e.target.value)
-                    minutesInMs = e.target.value * 60 * 1000;
-                } else if (e.target.id === 'seconds') {
-                    reqSeconds = Number(e.target.value)
-                    secondsInMs = e.target.value * 1000;
-                }
-                timeInMillieSeconds = hoursInMS  + minutesInMs + secondsInMs
+            if (e.target.id === 'hours') {
+                reqHours = Number(e.target.value)
+                hoursInMS = e.target.value * 60 * 60 * 1000
+            } else if (e.target.id === 'minutes') {
+                reqMinutes = Number(e.target.value)
+                minutesInMs = e.target.value * 60 * 1000;
+            } else if (e.target.id === 'seconds') {
+                reqSeconds = Number(e.target.value)
+                secondsInMs = e.target.value * 1000;
             }
+            timeInMillieSeconds = hoursInMS  + minutesInMs + secondsInMs
         })
     }
 }
@@ -114,46 +131,46 @@ initTimerValues()
 
 const countDownTimeColumns = () => {
     if (reqHours > 0) {
-        reqHours <= 10 ? countDownHours.innerText = `0${reqHours}:` : countDownHours.innerText = `${reqHours}:`
-    }
-    if (reqHours > 0 && reqMinutes === 0 && reqSeconds === 0) {
-        reqHours <= 10 ? countDownHours.innerText = `0${--reqHours}:` : countDownHours.innerText = `${--reqHours}:`
-        reqMinutes = 60
+        if (reqMinutes === 0 && reqSeconds === 0) {
+            reqHours <= 10 ? countDownHours.innerText = `0${--reqHours}:` : countDownHours.innerText = `${--reqHours}:`
+            reqMinutes = 60
+        } else {
+            reqHours <= 10 ? countDownHours.innerText = `0${reqHours}:` : countDownHours.innerText = `${reqHours}:`
+        }
     }
 
     if (reqMinutes > 0) {
-        reqMinutes <= 10 ? countDownMinutes.innerText = `0${reqMinutes}:` : countDownMinutes.innerText = `${reqMinutes}:`
-    }
-    if (reqMinutes > 0 && reqSeconds === 0) {
-        reqMinutes <= 10 ? countDownMinutes.innerText = `0${--reqMinutes}:` : countDownMinutes.innerText = `${--reqMinutes}:`
-        reqSeconds = 60
+        if (reqMinutes > 0 && reqSeconds === 0) {
+            reqMinutes <= 10 ? countDownMinutes.innerText = `0${--reqMinutes}:` : countDownMinutes.innerText = `${--reqMinutes}:`
+            reqSeconds = 60
+        } else {
+            reqMinutes <= 10 ? countDownMinutes.innerText = `0${reqMinutes}:` : countDownMinutes.innerText = `${reqMinutes}:`
+        }
     }
 
     if (reqSeconds > 0) {
-        if (reqSeconds <= 5 && Number(reqMinutes) === 0 && Number(reqHours) === 0) {
-            // change animation and timer clock color theme
-            countDownSeconds.innerText = `0${--reqSeconds}`
-            circleSvg.classList.add('change-circle-color')
-            timerContainer.classList.add('change-theme-color')
-        } else if (reqSeconds <= 10) {
-            countDownSeconds.innerText = `0${--reqSeconds}`
-        } else {
-            countDownSeconds.innerText = `${--reqSeconds}`
-        }
+        reqSeconds <=10 ? countDownSeconds.innerText = `0${--reqSeconds}` : countDownSeconds.innerText = `${--reqSeconds}`
     }
 }
 
-const countDown = () => {
+const calcAndChangeRingOffsetDynamically = () => {
+    let totalTimeInSeconds = (hoursInMS + minutesInMs + secondsInMs) / 1000
+    let requestedTimeInSeconds = (reqHours * 60 * 60) + (reqMinutes * 60) + reqSeconds
+    // (126) indicates the needed stroke-dashoffset (in percentage) to make the outer circle ring full.
+    let relativeRemainingTimePercentage = Math.abs(((requestedTimeInSeconds * 126) / totalTimeInSeconds) - 126)
+    circleSvg.style.strokeDashoffset = `${relativeRemainingTimePercentage}%`
+}
+
+const mainFunction = () => {
     if (timeInMillieSeconds > 0) {
         timeInMillieSeconds-=1000
-        increaseTimeCircleOffset()
         countDownTimeColumns()
+        calcAndChangeRingOffsetDynamically()
+        changeOrLeaveThemeColor()
     } else {
-        removeAnimations()
-        resetTimerVariables()
-        clearInterval(countDownInterval)
-        // vibrate user devices that supports vibration when time finished
         navigator.vibrate([500,200,500])
+        resetEverything()
+        clearInterval(mainSetInterval)
     }
 }
 
@@ -172,33 +189,19 @@ startBtn.addEventListener('click', (e) => {
         // while also making sure that this condition only runs when there's a valid inputs
         if (startBtnIndexCount === 1) {
             addAnimations()
-            timerContainer.style.animation = 'up-down 1.5s ease-in-out 0s normal infinite forwards running'
-            countDownInterval = setInterval(() => {
-                countDown()
+            mainSetInterval = setInterval(() => {
+                mainFunction()
             }, 1000)
         }
     }
 })
 
 pauseBtn.addEventListener('click', (e) => {
-    if (pauseBtn.innerText === 'pause') {
-        timerContainer.style.animationPlayState = 'paused';
-        pauseBtn.classList.add('resume')
-        pauseBtn.innerText = 'Resume'
-        clearInterval(countDownInterval)
-    } else if (pauseBtn.innerText === 'Resume') {
-        timerContainer.style.animationPlayState = 'running';
-        pauseBtn.classList.remove('resume')
-        pauseBtn.innerText = 'pause'
-        countDownInterval = setInterval(() => {
-            countDown()
-        }, 1000)
-    }
+    pauseOrResumeTimer()
 })
 
 cancelBtn.addEventListener('click', (e) => {
+    resetTimerDisplayColumns()
     resetEverything()
-    removeAnimations()
-    circleSvg.style.strokeDashoffset = '0%'
-    clearInterval(countDownInterval)
+    clearInterval(mainSetInterval)
 })

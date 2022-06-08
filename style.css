@@ -1,13 +1,15 @@
 :root {
     --default-theme-color: #eee;
     --minus-five-theme-color: #d21c1c;
-    --body-bg: black;
-    --set-timer-container-bg: #ffffff21;
+    --body-bg-gradient-fallback: rgba(23,23,23,1);
+    --body-bg-gradient: linear-gradient(0deg, rgb(0 167 139) 0, rgba(23,23,23,1) 50%);
+    --set-timer-container-bg: rgb(0,0,0);
     --timer-container-bg: #000000bd;
     --set-timer-input-color: #000000bd;
     --pause-btn-bg: #ff6347;
     --resume-btn-bg: #5f9ea0;
     --default-dark-bg-text: #f0f8ff;
+    --gradient-opacity: 0;
 }
 
 p, label, blockquote, h1, h2, h3, h4, h5, h6 {
@@ -28,10 +30,34 @@ body, html {
 }
 
 body {
-    background-color: var(--body-bg);
+    background: var(--body-bg-gradient-fallback);
+    background: var(--body-bg-gradient);
     display: flex;
     justify-content: center;
     align-items: center;
+    transition: all 1s ease-in-out;
+    -webkit-transition: all 1s ease-in-out;
+    -moz-transition: all 1s ease-in-out;
+    -ms-transition: all 1s ease-in-out;
+    -o-transition: all 1s ease-in-out;
+}
+
+body::before {
+    position: absolute;
+    content: '';
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(0deg, rgba(134,30,30,1) 0%, rgba(28,28,28,1) 50%);
+    transition: all 0.6s ease-in-out;
+    -webkit-transition: all 0.6s ease-in-out;
+    -moz-transition: all 0.6s ease-in-out;
+    -ms-transition: all 0.6s ease-in-out;
+    -o-transition: all 0.6s ease-in-out;
+    opacity: var(--gradient-opacity);
+}
+
+.change-gradient-color {
+    opacity: 1;
 }
 
 * {
@@ -106,7 +132,7 @@ main {
     border-radius: 50%;
     font-size: 35px;
     color: var(--default-theme-color);
-    box-shadow: 0 0 60px var(--default-theme-color);
+    box-shadow: 0 0 60px var(--black);
     margin: 50px;
     transition: all 0.5s ease-in-out;
     -webkit-transition: all 0.5s ease-in-out;
@@ -147,7 +173,6 @@ circle {
 
 .change-theme-color {
     color: var(--minus-five-theme-color);
-    box-shadow: 0 0 160px var(--minus-five-theme-color);
 }
 
 .change-circle-color {
@@ -188,11 +213,6 @@ circle {
     color: var(--default-dark-bg-text);
 }
 
-.helper-btn:hover {
-    filter: invert(1);
-    -webkit-filter: invert(1);
-}
-
 .hide-start-btn {
     opacity: 0;
     visibility: hidden;
@@ -229,4 +249,14 @@ circle {
         -ms-transform: translateY(-4px);
         -o-transform: translateY(-4px);
 }
+}
+
+@media screen and (hover: hover) {
+    .helper-btn:hover {
+        transform: scale(1.1);
+        -webkit-transform: scale(1.1);
+        -moz-transform: scale(1.1);
+        -ms-transform: scale(1.1);
+        -o-transform: scale(1.1);
+    }
 }
